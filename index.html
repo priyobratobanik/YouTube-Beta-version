@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/db2222aba3.js"></script>
+    <title>Document</title>
+     <style>
+     #navbar{
+         padding: 5px;
+         margin: 10px;
+         color: wheat;
+         font-size: 30px;
+         height: 45px;
+         background-color: rgb(36, 36, 36);
+     }
+     #showResult{
+         display: grid;
+         grid-template-columns: repeat(4,1fr);
+         gap: 20px;
+         margin: 25px;
+     }
+     #video>img{
+         width: 100%;
+
+     }
+     #btn{
+      font-size: 30px;
+     }
+     #YT,#video,#menu,#bell,#account{
+         margin-right: 40px;
+
+     }
+     #mic{
+         margin: 0px 300px 0px 20px;
+     }
+     #search{
+         margin: 0px 0px 0px 100px;
+         width: 450px;
+         font-size: 30px;
+         background-color: bisque;
+     }
+     .fa-brands{
+         color: red;
+     }
+
+     </style>
+
+</head>
+<body>
+    <div id="navbar">
+        <i class="fa-solid fa-bars" id="YT"></i>
+        <label for=""><i class="fa-brands fa-youtube"></i> Youtube</label>
+        <input type="text"id="search"placeholder="Search">
+        <button id="btn"><i class="fa-solid fa-magnifying-glass" onclick="searchVideo()"></i></button>
+        <i class="fa-solid fa-microphone" id="mic"></i>
+      <i class="fa-solid fa-video" id="video"></i>
+      <i class="fa-solid fa-table-cells" id="menu"></i>
+      <i class="fa-solid fa-bell" id="bell"></i>
+      <i class="fa-solid fa-circle-user" id="account"></i>
+    </div>
+    <div id="showResult"></div>
+
+</body>
+</html>
+
+<script>
+
+// const API="AIzaSyBUTk3vOs778d0F5kWUS1t2aCWU2vq1qqs";
+const trendingVideos = async () => {
+    try {
+      let name = "most popular videos in India"
+      let res = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${name}&key=AIzaSyAtlAwUjCIr9wNk_UOMfYJpwiJ-P2fM7Ao`
+      );
+      let data = await res.json();
+      console.log(data.items);
+      appendData(data.items);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  trendingVideos();
+  const searchVideo = async () => {
+      try {
+        let name = document.getElementById("search").value;
+        let res = await fetch(
+          `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=${name}&key=AIzaSyAtlAwUjCIr9wNk_UOMfYJpwiJ-P2fM7Ao`
+        );
+        let data = await res.json();
+        console.log(data.items);
+        appendData(data.items);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    const showResult = document.getElementById("showResult");
+    const appendData = (data) => {
+      showResult.innerHTML = null;
+      data.forEach(({snippet:{title,thumbnails:{high:{url}}},id:{videoId}},index) => {
+        let div = document.createElement("div");
+        div.setAttribute("id","video")
+        let name = document.createElement("p");
+        name.innerText = title;
+        let thumbnail = document.createElement("img");
+        thumbnail.src = url;
+        div.append(thumbnail, name);
+        showResult.append(div);
+        div.addEventListener("click",(event) => {
+            localStorage.setItem("videoId",JSON.stringify(videoId))
+            window.location.href = "Video.html"
+        })
+    });
+  };
+
+
+
+
+
+
+</script>
